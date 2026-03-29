@@ -195,7 +195,7 @@ def _draw_timeline(screen):
             lbl  = font_tiny.render(abbr, True, c)
             screen.blit(lbl, (tx+3, by+bh-20))
     # подсказка
-    hint = font_tiny.render("ЛКМ на шкалу — поставить атаку  |  ПКМ / инстр. Стереть — удалить", True, (70,70,110))
+    hint = font_tiny.render("ЛКМ на шкалу — поставити атаку  |  ПКМ / інструменти Стерти — видалити", True, (70,70,110))
     screen.blit(hint, (bx+6, by+bh+4))
 
 # ── Главная отрисовка ─────────────────────────────────
@@ -274,7 +274,7 @@ def _draw_left_panel(screen):
     bw3 = (PW-12)//3
     tool_rects = {}
     for i, bt in enumerate(["block","half","dark"]):
-        names = {"block":"Блок","half":"Полу","dark":"Тёмный"}
+        names = {"block":"Блок","half":"Напів","dark":"Темний"}
         cols  = {"block":(110,20,20),"half":(110,60,5),"dark":(18,18,18)}
         r = pygame.Rect(4+i*(bw3+2), y, bw3, 38)
         _btn(screen, r, names[bt], active=(ed_tool==bt), col=cols[bt])
@@ -308,7 +308,7 @@ def _draw_left_panel(screen):
     rects["atk_sel"] = atk_sel_rects
 
     # ── ПОЛЕ ВВОДА ВРЕМЕНИ ───────────────────────────
-    lbl2 = font_tiny.render("Время атаки (сек):", True, GRAY)
+    lbl2 = font_tiny.render("Час атаки (сек):", True, GRAY)
     screen.blit(lbl2,(4,y)); y+=16
     inp_r = pygame.Rect(4, y, PW-58, 28)
     pygame.draw.rect(screen,(35,70,35) if atk_input_focus else (22,22,48), inp_r, border_radius=5)
@@ -317,7 +317,7 @@ def _draw_left_panel(screen):
     screen.blit(font_ui.render(disp,True,WHITE),(inp_r.x+5,inp_r.y+5))
     rects["atk_input"] = inp_r
     r_add = pygame.Rect(PW-52, y, 48, 28)
-    _btn(screen, r_add, "+Добавить", col=(20,80,20))
+    _btn(screen, r_add, "+Додати", col=(20,80,20))
     rects["atk_add"] = r_add; y += 34
 
     # ── СПИСОК АТАК ──────────────────────────────────
@@ -349,15 +349,15 @@ def _draw_left_panel(screen):
     # ── КНОПКИ ───────────────────────────────────────
     half = (PW-12)//2
     rc = pygame.Rect(4,y,half,32); rs = pygame.Rect(PW//2+2,y,half,32)
-    _btn(screen,rc,"🗑 Очистить",col=(70,12,12))
-    _btn(screen,rs,"💾 Сохранить",col=(12,70,12))
+    _btn(screen,rc,"🗑 Очистити",col=(70,12,12))
+    _btn(screen,rs,"💾 Зберегти",col=(12,70,12))
     rects["clear"]=rc; rects["save"]=rs; y+=40
 
     rp2 = pygame.Rect(4,y,PW-8,50)
     hov = rp2.collidepoint(pygame.mouse.get_pos())
     pygame.draw.rect(screen,(40,120,240) if hov else (22,85,185), rp2, border_radius=10)
     pygame.draw.rect(screen,(90,170,255),rp2,3,border_radius=10)
-    pt = font_med.render("▶ ИГРАТЬ!", True, WHITE)
+    pt = font_med.render("▶ ГРАТИ!", True, WHITE)
     screen.blit(pt,(rp2.centerx-pt.get_width()//2,rp2.centery-pt.get_height()//2))
     rects["play"] = rp2
 
