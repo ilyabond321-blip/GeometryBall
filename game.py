@@ -215,7 +215,7 @@ def draw_hud(screen, lvl_dur, beat_interval=None):
             screen.blit(gs, (PANEL_W+14-rp, 28-rp))
         pygame.draw.circle(screen, YELLOW, (PANEL_W+14, 28), 10, 2)
 
-    hint = font_tiny.render("Стрелки — направление   ESC — меню   F11 — оконный режим", True, GRAY)
+    hint = font_tiny.render("Стрілки — напрямок   ESC — меню   F11 — віконний режим", True, GRAY)
     screen.blit(hint, (PANEL_W+20, HEIGHT-30))
 
 def draw_finish_marker(screen, ed_objects):
@@ -321,6 +321,6 @@ def draw_explode(screen, lvl_dur, runner=None):
     _draw_attacks_with_flying(screen)
     draw_particles_fx(screen)
     if int(explode_timer*4) % 2 == 0:
-        t = font_med.render("💀  УМЕР!", True, RED)
+        t = font_med.render("💀  ПОМЕР!", True, RED)
         screen.blit(t, (WIDTH//2-t.get_width()//2, HEIGHT//2-30))
     draw_hud(screen, lvl_dur)
