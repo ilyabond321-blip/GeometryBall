@@ -46,18 +46,18 @@ def _build(entry, phase):
     if t == "laser_h":
         y = int(entry["y"] * HEIGHT)
         return {"type":"laser_h","phase":phase,"timer":0.0,
-                "active_time":0.55,"data":{"y":y,"thick":22},"_eid":id(entry)}
+                "active_time":0.55,"data":{"y":y,"thick":sc(22)},"_eid":id(entry)}
 
     elif t == "laser_v":
         x = int(PANEL_W + entry["x"] * GW)
         return {"type":"laser_v","phase":phase,"timer":0.0,
-                "active_time":0.55,"data":{"x":x,"thick":22},"_eid":id(entry)}
+                "active_time":0.55,"data":{"x":x,"thick":sc(22)},"_eid":id(entry)}
 
     elif t == "double_laser":
         y = int(entry["y"] * HEIGHT)
         x = int(PANEL_W + entry["x"] * GW)
         return {"type":"double_laser","phase":phase,"timer":0.0,
-                "active_time":0.55,"data":{"y":y,"x":x,"thick":20},"_eid":id(entry)}
+                "active_time":0.55,"data":{"y":y,"x":x,"thick":sc(20)},"_eid":id(entry)}
 
     elif t == "flying_spinner":
         # Палка вылетает со стороны side, летит поперёк экрана, крутится
@@ -69,11 +69,11 @@ def _build(entry, phase):
 
         if side == "left":
             cx  = PANEL_W - L            # начинает за левым краем
-            vx  = 5.5                    # летит вправо
+            vx  = sc(5.5)                    # летит вправо
             vy  = 0.0
         else:
             cx  = WIDTH + L              # начинает за правым краем
-            vx  = -5.5                   # летит влево
+            vx  = -sc(5.5)                   # летит влево
             vy  = 0.0
 
         return {"type":"flying_spinner","phase":phase,"timer":0.0,
@@ -86,7 +86,7 @@ def _build(entry, phase):
 
     elif t == "blocks":
         seg = (WIDTH - PANEL_W) // 10
-        blocks = [{"x":PANEL_W+c*seg,"y":-80,"vy":9,"w":72,"h":72} for c in entry["cols"]]
+        blocks = [{"x":PANEL_W+c*seg,"y":-sc(80),"vy":sc(9),"w":sc(72),"h":sc(72)} for c in entry["cols"]]
         return {"type":"blocks","phase":phase,"timer":0.0,
                 "active_time":3.2,"data":{"blocks":blocks},"_eid":id(entry)}
 
@@ -97,7 +97,7 @@ def _build(entry, phase):
             elif side=="right": cx,cy,vx,vy=WIDTH+50,110+i*(HEIGHT//6),-7,0
             elif side=="top":   cx,cy,vx,vy=PANEL_W+160+i*((GW2-320)//5),-50,0,7
             else:               cx,cy,vx,vy=PANEL_W+160+i*((GW2-320)//5),HEIGHT+50,0,-7
-            circs.append({"x":float(cx),"y":float(cy),"vx":vx,"vy":vy,"r":28})
+            circs.append({"x":float(cx),"y":float(cy),"vx":vx,"vy":vy,"r":sc(28)})
         return {"type":"circles","phase":phase,"timer":0.0,
                 "active_time":3.8,"data":{"side":side,"circs":circs},"_eid":id(entry)}
     return None

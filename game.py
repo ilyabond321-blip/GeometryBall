@@ -3,6 +3,7 @@ import random
 import math
 import time
 from constants import *
+from lang import T
 import attacks as atk_module
 
 # ── Состояние ─────────────────────────────────────────
@@ -95,10 +96,10 @@ def spawn_explosion(x, y):
     particles = []
     cols = [BALL_COLOR, BALL_GLOW, YELLOW, WHITE, ORANGE, (255,80,80)]
     for _ in range(80):
-        a = random.uniform(0, 2*math.pi); spd = random.uniform(2, 11)
+        a = random.uniform(0, 2*math.pi); spd = random.uniform(sc(2), sc(11))
         particles.append({"x":float(x),"y":float(y),
             "vx":math.cos(a)*spd,"vy":math.sin(a)*spd,
-            "size":random.randint(4,14),"lifetime":random.uniform(0.5,1.3),
+            "size":random.randint(sc(4),sc(14)),"lifetime":random.uniform(0.5,1.3),
             "age":0.0,"color":random.choice(cols)})
 
 def set_direction(key):
@@ -114,21 +115,21 @@ def draw_stars(screen):
         c = int(br*180)
         pygame.draw.circle(screen, (c,c,c+40), (sx,sy), 1)
 
-def draw_grid(screen, ox=None, color=(25,25,50)):
-    if ox is None: ox = _game_left
-    for gx in range(ox, WIDTH, 80):
+def draw_grid(screen, color=(25,25,50)):
+    ox = _game_left
+    for gx in range(ox, WIDTH, sc(80)):
         pygame.draw.line(screen, color, (gx,0), (gx,HEIGHT))
-    for gy in range(0, HEIGHT, 80):
+    for gy in range(0, HEIGHT, sc(80)):
         pygame.draw.line(screen, color, (ox,gy), (WIDTH,gy))
 
 def draw_ball(screen, x, y):
-    for r in range(BALL_RADIUS+16, BALL_RADIUS, -4):
+    for r in range(BALL_RADIUS+sc(16), BALL_RADIUS, -4):
         gs = pygame.Surface((r*2,r*2), pygame.SRCALPHA)
         pygame.draw.circle(gs, (*BALL_GLOW,28), (r,r), r)
         screen.blit(gs, (x-r, y-r))
     pygame.draw.circle(screen, BALL_COLOR, (x,y), BALL_RADIUS)
     pygame.draw.circle(screen, BALL_GLOW,  (x,y), BALL_RADIUS, 3)
-    pygame.draw.circle(screen, (255,180,190), (x-9,y-9), 8)
+    pygame.draw.circle(screen, (255,180,190), (x-sc(9),y-sc(9)), sc(8))
 
 def draw_trail(screen):
     for i,(tx2,ty2) in enumerate(trail):
@@ -152,8 +153,8 @@ def draw_obs(screen):
         if bt == "half":
             r = pygame.Rect(r.x, r.y+r.h//2, r.w, r.h//2)
         if bt == "dark":
-            pygame.draw.rect(screen, (18,18,18), r, border_radius=4)
-            pygame.draw.rect(screen, (70,70,70), r, 2, border_radius=4)
+            pygame.draw.rect(screen, (18,18,18), r, border_radius=sc(4))
+            pygame.draw.rect(screen, (70,70,70), r, 2, border_radius=sc(4))
             for ox in range(0, r.w+r.h, 18):
                 x1=min(r.x+ox,r.x+r.w-1); y1=r.y if r.x+ox<=r.x+r.w-1 else r.y+(r.x+ox-(r.x+r.w-1))
                 x2=r.x if ox<=r.h else r.x+(ox-r.h); y2=min(r.y+ox,r.y+r.h-1)
@@ -161,8 +162,8 @@ def draw_obs(screen):
         else:
             col = RED if bt=="block" else ORANGE
             bcol= (255,120,120) if bt=="block" else (255,190,80)
-            pygame.draw.rect(screen, col, r, border_radius=4)
-            pygame.draw.rect(screen, bcol, r, 2, border_radius=4)
+            pygame.draw.rect(screen, col, r, border_radius=sc(4))
+            pygame.draw.rect(screen, bcol, r, 2, border_radius=sc(4))
             if bt == "block":
                 pygame.draw.line(screen, (255,90,90), r.topleft, r.bottomright, 2)
                 pygame.draw.line(screen, (255,90,90), r.topright, r.bottomleft, 2)
@@ -196,12 +197,12 @@ def draw_barriers(screen, runner):
 
 def draw_hud(screen, lvl_dur, beat_interval=None):
     left = max(0.0, lvl_dur-(time.time()-level_start_time))
-    bw2  = int((left/lvl_dur)*(WIDTH-PANEL_W-60))
-    pygame.draw.rect(screen, (40,40,70), (PANEL_W+30,18,WIDTH-PANEL_W-60,20), border_radius=10)
+    bw2  = int((left/lvl_dur)*(WIDTH-PANEL_W-sc(60)))
+    pygame.draw.rect(screen, (40,40,70), (PANEL_W+sc(30),sc(18),WIDTH-PANEL_W-60,20), border_radius=10)
     bar_col = GREEN if left>10 else ORANGE if left>5 else RED
     if bw2 > 0:
-        pygame.draw.rect(screen, bar_col, (PANEL_W+30,18,bw2,20), border_radius=10)
-    t = font_sm.render(f"⏱ {left:.1f} с   💀 {deaths}", True, WHITE)
+        pygame.draw.rect(screen, bar_col, (PANEL_W+sc(30),sc(18),bw2,20), border_radius=10)
+    t = font_sm.render(T("time_deaths", left, deaths), True, WHITE)
     screen.blit(t, ((PANEL_W+WIDTH)//2-t.get_width()//2, 46))
 
     if beat_interval:
@@ -212,10 +213,10 @@ def draw_hud(screen, lvl_dur, beat_interval=None):
             rp = int(14 + pulse * 10)
             gs = pygame.Surface((rp*2, rp*2), pygame.SRCALPHA)
             pygame.draw.circle(gs, (*YELLOW, int(pulse*220)), (rp,rp), rp)
-            screen.blit(gs, (PANEL_W+14-rp, 28-rp))
-        pygame.draw.circle(screen, YELLOW, (PANEL_W+14, 28), 10, 2)
+            screen.blit(gs, (PANEL_W+sc(14)-rp, sc(28)-rp))
+        pygame.draw.circle(screen, YELLOW, (PANEL_W+sc(14), sc(28)), 10, 2)
 
-    hint = font_tiny.render("Стрілки — напрямок   ESC — меню   F11 — віконний режим", True, GRAY)
+    hint = font_tiny.render(T("hud_hint"), True, GRAY)
     screen.blit(hint, (PANEL_W+20, HEIGHT-30))
 
 def draw_finish_marker(screen, ed_objects):
@@ -223,7 +224,7 @@ def draw_finish_marker(screen, ed_objects):
         if o["type"] == "finish":
             pulse = 0.5+0.5*math.sin(time.time()*4)
             fx, fy = o["x"]+PANEL_W, o["y"]
-            pygame.draw.circle(screen, CYAN, (fx,fy), int(26+6*pulse), 4)
+            pygame.draw.circle(screen, CYAN, (fx,fy), int(sc(26)+sc(6)*pulse), 4)
             ft = font_ui.render("ФИНИШ", True, CYAN)
             screen.blit(ft, (fx-ft.get_width()//2, fy-44))
 
@@ -299,9 +300,10 @@ def draw_level(screen, lvl_dur, is_custom=False, ed_objects=None,
 
 def _draw_game_content(surface, lvl_dur, is_custom, ed_objects, beat_interval, runner):
     bg = runner.get_bg_color() if runner else BG_LEVEL
-    # Цвет сетки светлее на красном фоне
     grid_c = (45, 15, 15) if bg[0] > 20 else (25,25,50)
-    draw_grid(surface, PANEL_W, grid_c)
+    draw_grid(surface, grid_c)
+    # Видимые границы игровой зоны
+    _draw_walls(surface, runner)
     draw_obs(surface)
     if is_custom and ed_objects:
         draw_finish_marker(surface, ed_objects)
@@ -310,6 +312,22 @@ def _draw_game_content(surface, lvl_dur, is_custom, ed_objects, beat_interval, r
     _draw_attacks_with_flying(surface)
     draw_trail(surface)
     draw_ball(surface, bx, by)
+
+def _draw_walls(surface, runner):
+    """Видимые границы игровой зоны (стены) во время игры."""
+    GL = _game_left; GR = _game_right
+    pulse = 0.4 + 0.3 * math.sin(time.time() * 3)
+    if runner and runner.barriers_on():
+        col = (int(200+55*pulse), 30, 30)
+    else:
+        col = (int(50+30*pulse), int(50+30*pulse), int(110+40*pulse))
+    # Левая стена
+    pygame.draw.line(surface, col, (GL, 0), (GL, HEIGHT), 3)
+    # Правая стена
+    pygame.draw.line(surface, col, (GR-1, 0), (GR-1, HEIGHT), 3)
+    # Верх и низ
+    pygame.draw.line(surface, col, (GL, 0),        (GR, 0),        2)
+    pygame.draw.line(surface, col, (GL, HEIGHT-1), (GR, HEIGHT-1), 2)
 
 def draw_explode(screen, lvl_dur, runner=None):
     bg = runner.get_bg_color() if runner else BG_LEVEL
@@ -321,6 +339,6 @@ def draw_explode(screen, lvl_dur, runner=None):
     _draw_attacks_with_flying(screen)
     draw_particles_fx(screen)
     if int(explode_timer*4) % 2 == 0:
-        t = font_med.render("💀  ПОМЕР!", True, RED)
+        t = font_med.render(T("died"), True, RED)
         screen.blit(t, (WIDTH//2-t.get_width()//2, HEIGHT//2-30))
     draw_hud(screen, lvl_dur)

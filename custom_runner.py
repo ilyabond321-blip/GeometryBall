@@ -6,8 +6,8 @@ from constants import *
 import attacks as atk_module
 
 # Границы игровой зоны в кастомном уровне (совпадают с editor.ED_LEFT / ED_RIGHT)
-GL = 270
-GR = WIDTH - 270
+GL = 300  # PANEL_W_ED
+GR = WIDTH
 
 _timeline = []
 _atk_idx  = 0
@@ -31,26 +31,26 @@ def _build(entry, phase):
     GW = GR - GL
     if t == "laser_h":
         return {"type":"laser_h","phase":phase,"timer":0.0,"active_time":0.55,
-                "data":{"y":int(entry["y"]*HEIGHT),"thick":22},"_eid":id(entry)}
+                "data":{"y":int(entry["y"]*HEIGHT),"thick":sc(22)},"_eid":id(entry)}
     elif t == "laser_v":
         return {"type":"laser_v","phase":phase,"timer":0.0,"active_time":0.55,
-                "data":{"x":int(GL+entry["x"]*GW),"thick":22},"_eid":id(entry)}
+                "data":{"x":int(GL+entry["x"]*GW),"thick":sc(22)},"_eid":id(entry)}
     elif t == "double_laser":
         return {"type":"double_laser","phase":phase,"timer":0.0,"active_time":0.55,
-                "data":{"y":int(entry["y"]*HEIGHT),"x":int(GL+entry["x"]*GW),"thick":20},
+                "data":{"y":int(entry["y"]*HEIGHT),"x":int(GL+entry["x"]*GW),"thick":sc(20)},
                 "_eid":id(entry)}
     elif t == "flying_spinner":
         side = entry.get("side","left"); cy = int(entry.get("cy_frac",0.5)*HEIGHT)
-        L = 120; cx = GL-L if side=="left" else GR+L; vx = 5.5 if side=="left" else -5.5
+        L = sc(120); cx = GL-L if side=="left" else GR+L; vx = sc(5.5) if side=="left" else -5.5
         return {"type":"flying_spinner","phase":phase,"timer":0.0,"active_time":5.5,
                 "data":{"cx":float(cx),"cy":float(cy),"vx":vx,"vy":0.0,
                         "angle":random.uniform(0,math.pi*2),
-                        "speed":entry.get("speed",3.0),"length":L,"thick":13},
+                        "speed":entry.get("speed",3.0),"length":L,"thick":sc(13)},
                 "_eid":id(entry)}
     elif t == "blocks":
         seg = GW//10
         return {"type":"blocks","phase":phase,"timer":0.0,"active_time":3.2,
-                "data":{"blocks":[{"x":GL+c*seg,"y":-80,"vy":9,"w":72,"h":72}
+                "data":{"blocks":[{"x":GL+c*seg,"y":-sc(80),"vy":sc(9),"w":sc(72),"h":sc(72)}
                                    for c in entry.get("cols",[3,7])]},"_eid":id(entry)}
     elif t == "circles":
         side = entry.get("side","left"); circs=[]
@@ -59,7 +59,7 @@ def _build(entry, phase):
             elif side=="right": cx2,cy2,vx,vy=GR+50,110+i*(HEIGHT//6),-7,0
             elif side=="top":   cx2,cy2,vx,vy=GL+160+i*((GW-320)//5),-50,0,7
             else:               cx2,cy2,vx,vy=GL+160+i*((GW-320)//5),HEIGHT+50,0,-7
-            circs.append({"x":float(cx2),"y":float(cy2),"vx":vx,"vy":vy,"r":28})
+            circs.append({"x":float(cx2),"y":float(cy2),"vx":vx,"vy":vy,"r":sc(28)})
         return {"type":"circles","phase":phase,"timer":0.0,"active_time":3.8,
                 "data":{"side":side,"circs":circs},"_eid":id(entry)}
     return None

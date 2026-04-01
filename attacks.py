@@ -21,17 +21,17 @@ def reset_attacks():
 def mk_laser_h():
     y = random.randint(100, HEIGHT - 100)
     return {"type": "laser_h", "phase": "warn", "timer": 0.0,
-            "active_time": 1.2, "data": {"y": y, "thick": 22}}
+            "active_time": 1.2, "data": {"y": y, "thick": sc(22)}}
 
 def mk_laser_v():
     x = random.randint(PANEL_W + 100, WIDTH - 100)
     return {"type": "laser_v", "phase": "warn", "timer": 0.0,
-            "active_time": 1.2, "data": {"x": x, "thick": 22}}
+            "active_time": 1.2, "data": {"x": x, "thick": sc(22)}}
 
 def mk_blocks():
     cols = random.sample(range(1, 9), random.randint(4, 6))
     blocks = [{"x": PANEL_W + c * ((WIDTH - PANEL_W) // 10),
-               "y": -70, "vy": 8, "w": 70, "h": 70} for c in cols]
+               "y": -sc(70), "vy": sc(8), "w": sc(70), "h": sc(70)} for c in cols]
     return {"type": "blocks", "phase": "warn", "timer": 0.0,
             "active_time": 3.5, "data": {"blocks": blocks}}
 
@@ -39,11 +39,11 @@ def mk_circles():
     side = random.choice(["left", "right", "top", "bottom"])
     circs = []
     for i in range(5):
-        if side == "left":    cx, cy, vx, vy = PANEL_W-40, 120+i*(HEIGHT//6), 6, 0
-        elif side == "right": cx, cy, vx, vy = WIDTH+40,  120+i*(HEIGHT//6), -6, 0
-        elif side == "top":   cx, cy, vx, vy = PANEL_W+150+i*((WIDTH-PANEL_W-300)//5), -40, 0, 6
-        else:                 cx, cy, vx, vy = PANEL_W+150+i*((WIDTH-PANEL_W-300)//5), HEIGHT+40, 0, -6
-        circs.append({"x": float(cx), "y": float(cy), "vx": vx, "vy": vy, "r": 28})
+        if side == "left":    cx, cy, vx, vy = PANEL_W-sc(40), sc(120)+i*(HEIGHT//6), sc(6), 0
+        elif side == "right": cx, cy, vx, vy = WIDTH+sc(40),  sc(120)+i*(HEIGHT//6), -sc(6), 0
+        elif side == "top":   cx, cy, vx, vy = PANEL_W+sc(150)+i*((WIDTH-PANEL_W-300)//5), -sc(40), 0, sc(6)
+        else:                 cx, cy, vx, vy = PANEL_W+sc(150)+i*((WIDTH-PANEL_W-300)//5), HEIGHT+sc(40), 0, -sc(6)
+        circs.append({"x": float(cx), "y": float(cy), "vx": vx, "vy": vy, "r": sc(28)})
     return {"type": "circles", "phase": "warn", "timer": 0.0,
             "active_time": 4.0, "data": {"side": side, "circs": circs}}
 
@@ -52,7 +52,7 @@ def mk_double_laser():
     y = random.randint(120, HEIGHT - 120)
     x = random.randint(PANEL_W + 120, WIDTH - 120)
     return {"type": "double_laser", "phase": "warn", "timer": 0.0,
-            "active_time": 1.4, "data": {"y": y, "x": x, "thick": 20}}
+            "active_time": 1.4, "data": {"y": y, "x": x, "thick": sc(20)}}
 
 def mk_spinners():
     """Крутящиеся палки в 3 случайных точках экрана."""
@@ -72,8 +72,8 @@ def mk_spinners():
             "cx": px, "cy": py,
             "angle": random.uniform(0, math.pi * 2),
             "speed": speed,
-            "length": random.randint(100, 150),
-            "thick": 14,
+            "length": random.randint(sc(100), sc(150)),
+            "thick": sc(14),
         })
     return {"type": "spinners", "phase": "warn", "timer": 0.0,
             "active_time": 5.0, "data": {"spinners": spinners}}
@@ -259,7 +259,7 @@ def draw_attacks(screen):
                     gs = pygame.Surface((r*2, HEIGHT), pygame.SRCALPHA); gs.fill((*CYAN, 15))
                     screen.blit(gs, (x2-r, 0))
                 pygame.draw.rect(screen, CYAN,  (x2-thk, 0, thk*2, HEIGHT))
-                pygame.draw.rect(screen, WHITE, (x2-3, 0, 6, HEIGHT))
+                pygame.draw.rect(screen, WHITE, (x2-3, 0, sc(6), HEIGHT))
 
             elif t == "double_laser":
                 # Горизонтальный — жёлто-красный
@@ -279,8 +279,8 @@ def draw_attacks(screen):
             elif t == "blocks":
                 for b in d["blocks"]:
                     r = pygame.Rect(b["x"]-b["w"]//2, int(b["y"]), b["w"], b["h"])
-                    pygame.draw.rect(screen, RED, r, border_radius=8)
-                    pygame.draw.rect(screen, (255,120,120), r, 2, border_radius=8)
+                    pygame.draw.rect(screen, RED, r, border_radius=sc(8))
+                    pygame.draw.rect(screen, (255,120,120), r, 2, border_radius=sc(8))
                     pygame.draw.line(screen, WHITE, r.topleft, r.bottomright, 2)
                     pygame.draw.line(screen, WHITE, r.topright, r.bottomleft, 2)
 
@@ -325,7 +325,7 @@ def draw_flying_spinner(screen, atk):
         # Мигающий контур там где палка появится
         pulse = 0.5 + 0.5 * math.sin(atk["timer"] * 10)
         wc = (255, int(50+150*pulse), 0)
-        pygame.draw.circle(screen, wc, (cx, cy), 22, 3)
+        pygame.draw.circle(screen, wc, (cx, cy), sc(22), sc(3))
         t2 = font_warn.render("!", True, wc)
         screen.blit(t2, (cx - t2.get_width()//2, cy - t2.get_height()//2))
         return
